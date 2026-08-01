@@ -6,6 +6,8 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import { computeDiscount, validateDiscountCode } from "../lib/discounts";
+import type { DiscountCode } from "../types";
 
 export interface CartItem {
   name: string;
@@ -22,6 +24,11 @@ interface CartContextValue {
   clearCart: () => void;
   totalItems: number;
   totalPrice: number;
+  appliedCode: DiscountCode | null;
+  discountAmount: number;
+  finalPrice: number;
+  applyCode: (code: string) => Promise<{ success: boolean; message: string }>;
+  removeCode: () => void;
 }
 
 const CartContext = createContext<CartContextValue | null>(null);
@@ -43,6 +50,7 @@ function loadFromStorage(): CartItem[] {
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>(loadFromStorage);
+  const [appliedCode, setAppliedCode] = useState<DiscountCode | null>(null);
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
@@ -79,14 +87,36 @@ export function CartProvider({ children }: { children: ReactNode }) {
     );
   }, []);
 
-  const clearCart = useCallback(() => setItems([]), []);
+  const clearCart = useCallback(() => {
+    setItems([]);
+    setAppliedCode(null);
+  }, []);
+
+  const removeCode = useCallback(() => setAppliedCode(null), []);
 
   const totalItems = items.reduce((sum, i) => sum + i.quantity, 0);
   const totalPrice = items.reduce((sum, i) => sum + i.priceNum * i.quantity, 0);
+  const discountAmount = appliedCode ? computeDiscount(appliedCode, totalPrice) : 0;
+  const finalPrice = Math.max(0, totalPrice - discountAmount);
+
+  const applyCode = useCallback(
+    async (code: string): Promise<{ success: boolean; message: string }> => {
+      const result = await validateDiscountCode(code, totalPrice);
+      if (result.valid) {
+        setAppliedCode(result.discount);
+        return { success: true, message: `Code applied: ${result.discount.code}` };
+      }
+      return { success: false, message: result.message };
+    },
+    [totalPrice],
+  );
 
   return (
     <CartContext.Provider
-      value={{ items, addItem, removeItem, updateQty, clearCart, totalItems, totalPrice }}
+      value={{
+        items, addItem, removeItem, updateQty, clearCart, totalItems,
+        totalPrice, appliedCode, discountAmount, finalPrice, applyCode, removeCode,
+      }}
     >
       {children}
     </CartContext.Provider>

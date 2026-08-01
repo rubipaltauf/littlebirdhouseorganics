@@ -25,6 +25,7 @@ function isMissingColumnError(error: unknown): boolean {
 function toCustomer(profile: ProfileRow): Customer {
   return {
     id: profile.id,
+    full_name: profile.full_name || profile.email || "Unnamed customer",
     name: profile.full_name || profile.email || "Unnamed customer",
     email: profile.email || "",
     phone: profile.phone || "",

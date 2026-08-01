@@ -941,3 +941,283 @@ textarea {
 .inv-positive { color: #2a5c38; font-weight: 600; }
 .inv-negative { color: #a83228; font-weight: 600; }
 
+
+/* ── Discount code input (Cart page) ─────────────────────────── */
+
+.discount-form {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.discount-input-row {
+  display: flex;
+  gap: 8px;
+}
+
+.discount-code-input {
+  flex: 1;
+  padding: 9px 12px;
+  border: 1.5px solid #d4b896;
+  border-radius: 8px;
+  background: #fdf8f2;
+  font-size: 0.93rem;
+  font-family: inherit;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #19281a;
+}
+
+.discount-code-input:focus {
+  outline: none;
+  border-color: #2a5c38;
+  box-shadow: 0 0 0 3px rgba(42,92,56,0.12);
+}
+
+.discount-code-input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.discount-msg-ok {
+  color: #2a5c38;
+  font-size: 0.88rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.discount-msg-err {
+  color: #a83228;
+  font-size: 0.88rem;
+  margin: 0;
+}
+
+.discount-applied {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #eef7f0;
+  border: 1.5px solid #2a5c38;
+  border-radius: 8px;
+  padding: 9px 14px;
+}
+
+.discount-applied-badge {
+  flex: 1;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #2a5c38;
+}
+
+.discount-saving-row {
+  color: #2a5c38;
+  font-weight: 600;
+}
+
+.cart-signin-prompt {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 0.88rem;
+  color: #6b5c4e;
+}
+
+.cart-signin-link {
+  color: #2a5c38;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+/* ── Sale price display (Shop cards) ──────────────────────────── */
+
+.shop-card-image-wrap {
+  position: relative;
+}
+
+.sale-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: #d4522a;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 4px;
+  z-index: 1;
+}
+
+.shop-card-price {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+}
+
+.price-strike {
+  text-decoration: line-through;
+  color: #9b8a7a;
+  font-weight: 400;
+  font-size: 0.95rem;
+}
+
+.sale-price-display {
+  color: #d4522a;
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+.sale-ends-note {
+  font-size: 0.82rem;
+  color: #d4522a;
+  margin: -4px 0 2px;
+  font-style: italic;
+}
+
+/* ── Admin: sale badge in product row ─────────────────────────── */
+
+.sale-badge-sm {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  padding: 2px 7px;
+  border-radius: 4px;
+  background: #d4522a;
+  color: #fff;
+  vertical-align: middle;
+}
+
+.sale-badge-scheduled {
+  background: #b07d3a;
+}
+
+/* ── Admin: sale / promotion section in product forms ─────────── */
+
+.product-sale-section {
+  border-top: 1.5px dashed #d4b896;
+  padding-top: 16px;
+  margin-top: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.product-sale-section .eyebrow {
+  margin-bottom: 2px;
+}
+
+/* ── Admin: discount code forms ───────────────────────────────── */
+
+.discount-code-gen-row {
+  display: flex;
+  gap: 8px;
+}
+
+.discount-form-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.dc-code-cell {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.dc-code {
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 0.88rem;
+  background: #f5ece0;
+  padding: 2px 7px;
+  border-radius: 4px;
+  letter-spacing: 0.05em;
+}
+
+.text-button.dc-copy {
+  font-size: 0.8rem;
+  color: #2a5c38;
+  padding: 0;
+}
+
+.dc-row-inactive td {
+  opacity: 0.55;
+}
+
+.dc-trigger {
+  font-size: 0.8rem;
+  padding: 2px 7px;
+  border-radius: 4px;
+  background: #f0e8d8;
+  color: #6b5c4e;
+}
+
+.dc-trigger-birthday {
+  background: #fce8d0;
+  color: #9a4e1a;
+}
+
+/* ── Admin: birthday panel ────────────────────────────────────── */
+
+.birthday-panel {
+  background: linear-gradient(135deg, #fff8ee 0%, #fdf3e5 100%);
+  border: 1.5px solid #f0c87a;
+}
+
+.birthday-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.birthday-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 10px 0;
+  border-bottom: 1px solid #f0e0c0;
+}
+
+.birthday-row:last-child {
+  border-bottom: none;
+}
+
+/* ── Shared admin table styles ────────────────────────────────── */
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.table th {
+  text-align: left;
+  padding: 8px 10px;
+  border-bottom: 2px solid #e8d8c0;
+  color: #6b5c4e;
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.table td {
+  padding: 9px 10px;
+  border-bottom: 1px solid #f0e0c0;
+  vertical-align: middle;
+}
+
+.table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.muted {
+  color: #9b8a7a;
+  font-size: 0.9rem;
+}

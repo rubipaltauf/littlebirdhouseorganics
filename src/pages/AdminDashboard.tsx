@@ -8,12 +8,19 @@ import {
   deleteProduct,
   getInventoryLog,
   getProducts,
+  isOnSale,
   updateProduct,
   type ProductInput,
 } from "../lib/products";
-import type { Customer, InventoryTransaction, Product } from "../types";
+import {
+  createDiscountCode,
+  generateCodeString,
+  listDiscountCodes,
+  setDiscountActive,
+} from "../lib/discounts";
+import type { Customer, DiscountCode, InventoryTransaction, Product } from "../types";
 
-type Tab = "customers" | "products";
+type Tab = "customers" | "products" | "discounts";
 
 const REASONS = [
   { value: "restock", label: "Restock (new inventory received)" },
@@ -169,6 +176,9 @@ function ProductsSection() {
   const [addDetails, setAddDetails] = useState("");
   const [addSortOrder, setAddSortOrder] = useState("0");
   const [addStock, setAddStock] = useState("0");
+  const [addSalePrice, setAddSalePrice] = useState("");
+  const [addSaleStartsAt, setAddSaleStartsAt] = useState("");
+  const [addSaleEndsAt, setAddSaleEndsAt] = useState("");
   const [isAdding, setIsAdding] = useState(false);
 
   // edit-form fields
@@ -177,6 +187,9 @@ function ProductsSection() {
   const [editDescription, setEditDescription] = useState("");
   const [editDetails, setEditDetails] = useState("");
   const [editSortOrder, setEditSortOrder] = useState("0");
+  const [editSalePrice, setEditSalePrice] = useState("");
+  const [editSaleStartsAt, setEditSaleStartsAt] = useState("");
+  const [editSaleEndsAt, setEditSaleEndsAt] = useState("");
   const [isSaving, setIsSaving] = useState(false);
 
   async function load() {
@@ -199,6 +212,9 @@ function ProductsSection() {
     setEditDescription(product.description);
     setEditDetails(product.details);
     setEditSortOrder(String(product.sortOrder));
+    setEditSalePrice(product.salePrice !== null ? String(product.salePrice) : "");
+    setEditSaleStartsAt(product.saleStartsAt ? product.saleStartsAt.slice(0, 16) : "");
+    setEditSaleEndsAt(product.saleEndsAt ? product.saleEndsAt.slice(0, 16) : "");
   }
 
   function cancelEdit() { setEditingId(null); }
@@ -217,9 +233,13 @@ function ProductsSection() {
         name: addName, price: addPrice, description: addDescription,
         details: addDetails, sort_order: Number(addSortOrder),
         stock_quantity: Number(addStock),
+        sale_price: addSalePrice ? Number(addSalePrice) : null,
+        sale_starts_at: addSaleStartsAt ? new Date(addSaleStartsAt).toISOString() : null,
+        sale_ends_at: addSaleEndsAt ? new Date(addSaleEndsAt).toISOString() : null,
       });
       setAddName(""); setAddPrice(""); setAddDescription("");
       setAddDetails(""); setAddSortOrder("0"); setAddStock("0");
+      setAddSalePrice(""); setAddSaleStartsAt(""); setAddSaleEndsAt("");
       setShowAddForm(false);
       await load();
     } catch (err) {
@@ -238,6 +258,9 @@ function ProductsSection() {
       await updateProduct(editingId, {
         name: editName, price: editPrice, description: editDescription,
         details: editDetails, sort_order: Number(editSortOrder),
+        sale_price: editSalePrice ? Number(editSalePrice) : null,
+        sale_starts_at: editSaleStartsAt ? new Date(editSaleStartsAt).toISOString() : null,
+        sale_ends_at: editSaleEndsAt ? new Date(editSaleEndsAt).toISOString() : null,
       } satisfies ProductInput);
       setEditingId(null);
       await load();
@@ -319,7 +342,7 @@ function ProductsSection() {
               <input id="add-name" value={addName} onChange={(e) => setAddName(e.target.value)} required />
             </div>
             <div className="field">
-              <label htmlFor="add-price">Price (e.g. $28)</label>
+              <label htmlFor="add-price">Regular price (e.g. $28)</label>
               <input id="add-price" value={addPrice} onChange={(e) => setAddPrice(e.target.value)} placeholder="$28" required />
             </div>
             <div className="field">
@@ -338,6 +361,27 @@ function ProductsSection() {
               <label htmlFor="add-sort">Sort order</label>
               <input id="add-sort" type="number" min="0" value={addSortOrder} onChange={(e) => setAddSortOrder(e.target.value)} />
             </div>
+
+            <div className="product-sale-section">
+              <p className="eyebrow">Sale / promotion (optional)</p>
+              <div className="discount-form-row">
+                <div className="field" style={{ flex: 1 }}>
+                  <label htmlFor="add-sale-price">Sale price ($)</label>
+                  <input id="add-sale-price" type="number" min="0.01" step="0.01" value={addSalePrice} onChange={(e) => setAddSalePrice(e.target.value)} placeholder="Leave blank for no sale" />
+                </div>
+              </div>
+              <div className="discount-form-row">
+                <div className="field" style={{ flex: 1 }}>
+                  <label htmlFor="add-sale-starts">Sale starts (optional)</label>
+                  <input id="add-sale-starts" type="datetime-local" value={addSaleStartsAt} onChange={(e) => setAddSaleStartsAt(e.target.value)} />
+                </div>
+                <div className="field" style={{ flex: 1 }}>
+                  <label htmlFor="add-sale-ends">Sale ends (optional)</label>
+                  <input id="add-sale-ends" type="datetime-local" value={addSaleEndsAt} onChange={(e) => setAddSaleEndsAt(e.target.value)} />
+                </div>
+              </div>
+            </div>
+
             <div className="actions">
               <button className="button primary" type="submit" disabled={isAdding}>
                 {isAdding ? "Adding…" : "Add product"}
@@ -363,7 +407,7 @@ function ProductsSection() {
                   <input id="edit-name" value={editName} onChange={(e) => setEditName(e.target.value)} required />
                 </div>
                 <div className="field">
-                  <label htmlFor="edit-price">Price</label>
+                  <label htmlFor="edit-price">Regular price</label>
                   <input id="edit-price" value={editPrice} onChange={(e) => setEditPrice(e.target.value)} required />
                 </div>
                 <div className="field">
@@ -378,6 +422,27 @@ function ProductsSection() {
                   <label htmlFor="edit-sort">Sort order</label>
                   <input id="edit-sort" type="number" min="0" value={editSortOrder} onChange={(e) => setEditSortOrder(e.target.value)} />
                 </div>
+
+                <div className="product-sale-section">
+                  <p className="eyebrow">Sale / promotion</p>
+                  <div className="discount-form-row">
+                    <div className="field" style={{ flex: 1 }}>
+                      <label htmlFor="edit-sale-price">Sale price ($) — clear to end sale</label>
+                      <input id="edit-sale-price" type="number" min="0.01" step="0.01" value={editSalePrice} onChange={(e) => setEditSalePrice(e.target.value)} placeholder="Leave blank for no sale" />
+                    </div>
+                  </div>
+                  <div className="discount-form-row">
+                    <div className="field" style={{ flex: 1 }}>
+                      <label htmlFor="edit-sale-starts">Sale starts</label>
+                      <input id="edit-sale-starts" type="datetime-local" value={editSaleStartsAt} onChange={(e) => setEditSaleStartsAt(e.target.value)} />
+                    </div>
+                    <div className="field" style={{ flex: 1 }}>
+                      <label htmlFor="edit-sale-ends">Sale ends</label>
+                      <input id="edit-sale-ends" type="datetime-local" value={editSaleEndsAt} onChange={(e) => setEditSaleEndsAt(e.target.value)} />
+                    </div>
+                  </div>
+                </div>
+
                 <div className="actions">
                   <button className="button primary" type="submit" disabled={isSaving}>
                     {isSaving ? "Saving…" : "Save changes"}
@@ -390,9 +455,23 @@ function ProductsSection() {
                 <div className="product-row-info">
                   <div className="product-row-name-line">
                     <strong>{product.name}</strong>
-                    <span className="product-row-price">{product.price}</span>
+                    {isOnSale(product) && product.salePrice !== null ? (
+                      <>
+                        <span className="price-strike product-row-price">{product.price}</span>
+                        <span className="sale-price-display product-row-price">${product.salePrice % 1 === 0 ? product.salePrice : product.salePrice.toFixed(2)}</span>
+                        <span className="sale-badge-sm">ON SALE</span>
+                      </>
+                    ) : (
+                      <span className="product-row-price">{product.price}</span>
+                    )}
+                    {product.salePrice !== null && !isOnSale(product) && (
+                      <span className="sale-badge-sm sale-badge-scheduled">SALE SCHEDULED</span>
+                    )}
                     <StockPill qty={product.stockQuantity} />
                   </div>
+                  {isOnSale(product) && product.saleEndsAt && (
+                    <span className="sale-ends-note">Sale ends {new Date(product.saleEndsAt).toLocaleDateString()}</span>
+                  )}
                   <span className="muted product-row-details">{product.details}</span>
                   <p className="copy product-row-desc">{product.description}</p>
                 </div>
@@ -427,6 +506,70 @@ function StockPill({ qty }: { qty: number }) {
 }
 
 // ── Customers section (unchanged logic, extracted) ────────────────
+
+function BirthdayPanel({ customers, onCodeCreated }: { customers: Customer[]; onCodeCreated: () => void }) {
+  const [generatingId, setGeneratingId] = useState<string | null>(null);
+  const [copiedCode, setCopiedCode] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  async function generateBirthdayCode(c: Customer) {
+    setGeneratingId(c.id);
+    setError(null);
+    const firstName = c.full_name.split(" ")[0].toUpperCase();
+    const code = `BDAY-${firstName}-${generateCodeString(6)}`;
+    const now = new Date();
+    const expires = new Date(now.getFullYear(), now.getMonth() + 1, now.getDate());
+    try {
+      await createDiscountCode({
+        code,
+        type: "percent",
+        value: 20,
+        min_order: 0,
+        max_uses: 1,
+        expires_at: expires.toISOString(),
+        trigger_type: "birthday",
+        assigned_to: c.id,
+      });
+      void navigator.clipboard.writeText(code);
+      setCopiedCode(code);
+      setTimeout(() => setCopiedCode(null), 3000);
+      onCodeCreated();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Unable to generate code.");
+    } finally {
+      setGeneratingId(null);
+    }
+  }
+
+  return (
+    <div className="panel stack birthday-panel">
+      <h2>🎂 Birthdays this month</h2>
+      {error && <p className="form-error">{error}</p>}
+      {copiedCode && <p className="discount-msg-ok">Code <strong>{copiedCode}</strong> created &amp; copied to clipboard!</p>}
+      <ul className="birthday-list">
+        {customers.map(c => (
+          <li key={c.id} className="birthday-row">
+            <div>
+              <strong>{c.full_name}</strong>
+              <span className="muted"> — {c.email}</span>
+              {c.birthday && (
+                <span className="muted"> · {new Date(c.birthday).toLocaleDateString("en-US", { month: "long", day: "numeric" })}</span>
+              )}
+            </div>
+            <button
+              type="button"
+              className="button primary"
+              onClick={() => void generateBirthdayCode(c)}
+              disabled={generatingId === c.id}
+            >
+              {generatingId === c.id ? "Generating…" : "Generate birthday code"}
+            </button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
 
 function CustomersSection() {
   const [customers, setCustomers] = useState<Customer[]>([]);
@@ -473,8 +616,17 @@ function CustomersSection() {
     }
   }
 
+  const thisMonth = new Date().getMonth();
+  const birthdayCustomers = customers.filter((c) => {
+    if (!c.birthday) return false;
+    return new Date(c.birthday).getMonth() === thisMonth;
+  });
+
   return (
     <>
+      {birthdayCustomers.length > 0 && (
+        <BirthdayPanel customers={birthdayCustomers} onCodeCreated={() => void loadCustomers()} />
+      )}
       <div className="panel stack">
         <div className="grid">
           <div className="panel">
@@ -487,7 +639,7 @@ function CustomersSection() {
           </div>
           <div className="panel">
             <strong>Birthday promos</strong>
-            <p className="copy">prepared for automated birthday outreach</p>
+            <p className="copy">{birthdayCustomers.length} birthday{birthdayCustomers.length !== 1 ? "s" : ""} this month</p>
           </div>
         </div>
       </div>
@@ -570,6 +722,218 @@ function CustomersSection() {
   );
 }
 
+// ── Discounts section ─────────────────────────────────────────────
+
+function DiscountsSection() {
+  const [codes, setCodes] = useState<DiscountCode[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [showForm, setShowForm] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [copiedId, setCopiedId] = useState<string | null>(null);
+
+  // form fields
+  const [code, setCode] = useState("");
+  const [type, setType] = useState<"percent" | "fixed">("percent");
+  const [value, setValue] = useState("");
+  const [minOrder, setMinOrder] = useState("0");
+  const [maxUses, setMaxUses] = useState("");
+  const [expiresAt, setExpiresAt] = useState("");
+
+  async function load() {
+    try { setCodes(await listDiscountCodes()); }
+    catch (err) { setError(err instanceof Error ? err.message : "Unable to load codes."); }
+    finally { setIsLoading(false); }
+  }
+
+  useEffect(() => { void load(); }, []);
+
+  function randomize() { setCode(generateCodeString()); }
+
+  async function handleCreate(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setError(null);
+    setIsSaving(true);
+    try {
+      await createDiscountCode({
+        code,
+        type,
+        value: parseFloat(value),
+        min_order: parseFloat(minOrder) || 0,
+        max_uses: maxUses ? parseInt(maxUses, 10) : null,
+        expires_at: expiresAt ? new Date(expiresAt).toISOString() : null,
+        trigger_type: "manual",
+      });
+      setCode(""); setValue(""); setMinOrder("0"); setMaxUses(""); setExpiresAt("");
+      setShowForm(false);
+      await load();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Unable to create code.");
+    } finally {
+      setIsSaving(false);
+    }
+  }
+
+  async function toggleActive(dc: DiscountCode) {
+    try {
+      await setDiscountActive(dc.id, !dc.isActive);
+      await load();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Unable to update code.");
+    }
+  }
+
+  function copyCode(dc: DiscountCode) {
+    void navigator.clipboard.writeText(dc.code);
+    setCopiedId(dc.id);
+    setTimeout(() => setCopiedId(null), 1800);
+  }
+
+  if (!hasSupabaseConfig) {
+    return (
+      <div className="panel stack">
+        <h2>Discount codes</h2>
+        <p className="copy">Connect Supabase and run <code>0005_discount_codes.sql</code> to manage discount codes.</p>
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <div className="panel stack">
+        <div className="admin-section-header">
+          <div>
+            <h2>Discount codes</h2>
+            <p className="muted">{codes.length} code{codes.length !== 1 ? "s" : ""} • {codes.filter(c => c.isActive).length} active</p>
+          </div>
+          <button type="button" className="button primary" onClick={() => setShowForm(v => !v)}>
+            {showForm ? "Cancel" : "+ Create code"}
+          </button>
+        </div>
+
+        {error && <p className="form-error">{error}</p>}
+
+        {showForm && (
+          <form className="form product-form" onSubmit={handleCreate}>
+            <h3>New discount code</h3>
+
+            <div className="field">
+              <label htmlFor="dc-code">Code</label>
+              <div className="discount-code-gen-row">
+                <input
+                  id="dc-code"
+                  value={code}
+                  onChange={e => setCode(e.target.value.toUpperCase())}
+                  placeholder="e.g. SUMMER20"
+                  required
+                  style={{ flex: 1 }}
+                />
+                <button type="button" className="button secondary" onClick={randomize}>
+                  Generate random
+                </button>
+              </div>
+            </div>
+
+            <div className="discount-form-row">
+              <div className="field" style={{ flex: 1 }}>
+                <label htmlFor="dc-type">Type</label>
+                <select id="dc-type" value={type} onChange={e => setType(e.target.value as "percent" | "fixed")}>
+                  <option value="percent">Percentage off (%)</option>
+                  <option value="fixed">Fixed amount off ($)</option>
+                </select>
+              </div>
+              <div className="field" style={{ flex: 1 }}>
+                <label htmlFor="dc-value">{type === "percent" ? "Discount %" : "Discount $"}</label>
+                <input id="dc-value" type="number" min="0.01" step="0.01" value={value} onChange={e => setValue(e.target.value)} placeholder={type === "percent" ? "20" : "5.00"} required />
+              </div>
+            </div>
+
+            <div className="discount-form-row">
+              <div className="field" style={{ flex: 1 }}>
+                <label htmlFor="dc-min">Min order ($)</label>
+                <input id="dc-min" type="number" min="0" step="0.01" value={minOrder} onChange={e => setMinOrder(e.target.value)} placeholder="0" />
+              </div>
+              <div className="field" style={{ flex: 1 }}>
+                <label htmlFor="dc-max-uses">Max uses (blank = unlimited)</label>
+                <input id="dc-max-uses" type="number" min="1" value={maxUses} onChange={e => setMaxUses(e.target.value)} placeholder="Unlimited" />
+              </div>
+            </div>
+
+            <div className="field">
+              <label htmlFor="dc-expires">Expiry date (optional)</label>
+              <input id="dc-expires" type="date" value={expiresAt} onChange={e => setExpiresAt(e.target.value)} />
+            </div>
+
+            <div className="actions">
+              <button className="button primary" type="submit" disabled={isSaving}>
+                {isSaving ? "Saving…" : "Create code"}
+              </button>
+              <button className="button secondary" type="button" onClick={() => setShowForm(false)}>Cancel</button>
+            </div>
+          </form>
+        )}
+      </div>
+
+      <div className="panel stack">
+        {isLoading && <p className="muted">Loading codes…</p>}
+        {!isLoading && codes.length === 0 && <p className="muted">No discount codes yet.</p>}
+        {codes.length > 0 && (
+          <table className="table">
+            <thead>
+              <tr>
+                <th>Code</th>
+                <th>Discount</th>
+                <th>Min order</th>
+                <th>Uses</th>
+                <th>Expires</th>
+                <th>Trigger</th>
+                <th>Status</th>
+                <th />
+              </tr>
+            </thead>
+            <tbody>
+              {codes.map(dc => (
+                <tr key={dc.id} className={dc.isActive ? "" : "dc-row-inactive"}>
+                  <td>
+                    <div className="dc-code-cell">
+                      <code className="dc-code">{dc.code}</code>
+                      <button type="button" className="text-button dc-copy" onClick={() => copyCode(dc)}>
+                        {copiedId === dc.id ? "Copied!" : "Copy"}
+                      </button>
+                    </div>
+                  </td>
+                  <td>
+                    {dc.type === "percent" ? `${dc.value}% off` : `$${dc.value.toFixed(2)} off`}
+                  </td>
+                  <td>{dc.minOrder > 0 ? `$${dc.minOrder.toFixed(2)}` : "—"}</td>
+                  <td>{dc.usesCount}{dc.maxUses !== null ? ` / ${dc.maxUses}` : ""}</td>
+                  <td className="muted">
+                    {dc.expiresAt ? new Date(dc.expiresAt).toLocaleDateString() : "Never"}
+                  </td>
+                  <td>
+                    <span className={`dc-trigger dc-trigger-${dc.triggerType}`}>
+                      {dc.triggerType === "birthday" ? "🎂 Birthday" : "Manual"}
+                    </span>
+                  </td>
+                  <td>
+                    <button
+                      type="button"
+                      className={dc.isActive ? "button secondary" : "button primary"}
+                      onClick={() => void toggleActive(dc)}
+                    >
+                      {dc.isActive ? "Deactivate" : "Activate"}
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
+    </>
+  );
+}
+
 // ── Dashboard shell ───────────────────────────────────────────────
 
 export default function AdminDashboard() {
@@ -580,25 +944,15 @@ export default function AdminDashboard() {
       <div className="panel stack">
         <h1>Admin dashboard</h1>
         <div className="admin-tabs">
-          <button
-            type="button"
-            className={tab === "customers" ? "button primary" : "button secondary"}
-            onClick={() => setTab("customers")}
-          >
-            Customers
-          </button>
-          <button
-            type="button"
-            className={tab === "products" ? "button primary" : "button secondary"}
-            onClick={() => setTab("products")}
-          >
-            Products
-          </button>
+          <button type="button" className={tab === "customers" ? "button primary" : "button secondary"} onClick={() => setTab("customers")}>Customers</button>
+          <button type="button" className={tab === "products" ? "button primary" : "button secondary"} onClick={() => setTab("products")}>Products</button>
+          <button type="button" className={tab === "discounts" ? "button primary" : "button secondary"} onClick={() => setTab("discounts")}>Discounts</button>
         </div>
       </div>
 
       {tab === "customers" && <CustomersSection />}
       {tab === "products" && <ProductsSection />}
+      {tab === "discounts" && <DiscountsSection />}
     </section>
   );
 }
