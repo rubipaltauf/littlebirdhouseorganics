@@ -85,7 +85,8 @@ textarea {
   gap: 12px;
 }
 
-.nav a {
+.nav a,
+.nav-signout {
   text-decoration: none;
   padding: 8px 12px;
   border-radius: 999px;
@@ -93,10 +94,12 @@ textarea {
   border: 1px solid rgba(138, 95, 30, 0.28);
   color: #2a5c38;
   font-weight: 500;
+  cursor: pointer;
   transition: background 0.18s, border-color 0.18s, transform 0.18s;
 }
 
-.nav a:hover {
+.nav a:hover,
+.nav-signout:hover {
   background: rgba(44, 92, 56, 0.1);
   border-color: rgba(44, 92, 56, 0.38);
 }

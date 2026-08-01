@@ -1,22 +1,26 @@
 import { useEffect, useState } from "react";
-import { Link, Outlet } from "react-router-dom";
-import { getSession, hasAdminRole } from "../../lib/auth";
+import { Link, Outlet, useNavigate } from "react-router-dom";
+import { getSession, hasAdminRole, signOut } from "../../lib/auth";
 
 export function AppShell() {
+  const navigate = useNavigate();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    async function loadAdminState() {
+    async function loadAuthState() {
       const session = await getSession();
       const user = session?.user;
 
       if (!user) {
+        setIsLoggedIn(false);
         setIsAdmin(false);
         setIsLoaded(true);
         return;
       }
 
+      setIsLoggedIn(true);
       try {
         setIsAdmin(await hasAdminRole(user.id));
       } catch {
@@ -26,8 +30,18 @@ export function AppShell() {
       }
     }
 
-    void loadAdminState();
+    void loadAuthState();
   }, []);
+
+  async function handleSignOut() {
+    try {
+      await signOut();
+    } finally {
+      setIsLoggedIn(false);
+      setIsAdmin(false);
+      navigate("/", { replace: true });
+    }
+  }
 
   return (
     <div className="shell">
@@ -39,13 +53,22 @@ export function AppShell() {
         <nav className="nav" aria-label="Primary">
           <Link to="/">Home</Link>
           <Link to="/shop">Shop</Link>
-          {!isLoaded ? null : (
+          {isLoaded && (
             <>
-              {isAdmin ? <Link to="/admin/dashboard">Admin</Link> : null}
-              {!isAdmin ? <Link to="/login">Login</Link> : null}
+              {isAdmin && <Link to="/admin/dashboard">Admin</Link>}
+              {isLoggedIn && !isAdmin && <Link to="/account">Account</Link>}
+              {isLoggedIn ? (
+                <button type="button" className="nav-signout" onClick={handleSignOut}>
+                  Sign out
+                </button>
+              ) : (
+                <>
+                  <Link to="/login">Login</Link>
+                  <Link to="/signup">Sign up</Link>
+                </>
+              )}
             </>
           )}
-          {!isAdmin && isLoaded ? <Link to="/signup">Sign up</Link> : null}
         </nav>
       </header>
 
