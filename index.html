@@ -8,6 +8,16 @@
       name="description"
       content="Little Birdhouse Organics storefront and admin CRM starter."
     />
+    <script>
+      (function () {
+        var key = "lbo-pages-route";
+        var storedRoute = sessionStorage.getItem(key);
+        if (storedRoute) {
+          sessionStorage.removeItem(key);
+          history.replaceState(null, "", storedRoute);
+        }
+      })();
+    </script>
     <script type="module" crossorigin src="/littlebirdhouseorganics/assets/index-dhNKGMsR.js"></script>
     <link rel="stylesheet" crossorigin href="/littlebirdhouseorganics/assets/index-DTXswThh.css">
   </head>
@@ -15,4 +25,3 @@
     <div id="root"></div>
   </body>
 </html>
-
