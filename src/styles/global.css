@@ -693,6 +693,21 @@ textarea {
   cursor: not-allowed;
 }
 
+.cart-signin-prompt {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.9rem;
+  color: #6a5c34;
+}
+
+.cart-signin-link {
+  color: #2a5c38;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
 .cart-clear {
   color: #8a5f1e;
   font-size: 0.9rem;
