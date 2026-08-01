@@ -28,7 +28,7 @@ function DiscountInput() {
     return (
       <div className="discount-applied">
         <span className="discount-applied-badge">
-          🏷 {appliedCode.code} — {saving}
+          {String.fromCodePoint(0x1F3F7)} {appliedCode.code} — {saving}
         </span>
         <button type="button" className="text-button cart-remove" onClick={removeCode}>
           Remove
@@ -49,7 +49,7 @@ function DiscountInput() {
           disabled={totalPrice === 0}
         />
         <button type="submit" className="button secondary" disabled={loading || !input.trim()}>
-          {loading ? "…" : "Apply"}
+          {loading ? "..." : "Apply"}
         </button>
       </div>
       {status && (
@@ -102,7 +102,7 @@ export default function Cart() {
               </div>
               <div className="cart-item-controls">
                 <div className="qty-stepper">
-                  <button type="button" aria-label="Decrease quantity" onClick={() => updateQty(item.name, item.quantity - 1)} disabled={item.quantity <= 1}>−</button>
+                  <button type="button" aria-label="Decrease quantity" onClick={() => updateQty(item.name, item.quantity - 1)} disabled={item.quantity <= 1}>-</button>
                   <span>{item.quantity}</span>
                   <button type="button" aria-label="Increase quantity" onClick={() => updateQty(item.name, item.quantity + 1)}>+</button>
                 </div>
@@ -125,7 +125,7 @@ export default function Cart() {
           {discountAmount > 0 && (
             <div className="cart-summary-row discount-saving-row">
               <span>Discount</span>
-              <strong>−${discountAmount.toFixed(2)}</strong>
+              <strong>-${discountAmount.toFixed(2)}</strong>
             </div>
           )}
           <div className="cart-summary-row muted">
@@ -140,12 +140,12 @@ export default function Cart() {
 
           {isLoggedIn ? (
             <button type="button" className="button primary cart-checkout-btn" disabled>
-              Checkout — coming soon
+              Checkout - coming soon
             </button>
           ) : (
             <>
               <button type="button" className="button primary cart-checkout-btn" disabled>
-                Checkout as guest — coming soon
+                Checkout as guest - coming soon
               </button>
               <div className="cart-signin-prompt">
                 <span>Have an account?</span>
