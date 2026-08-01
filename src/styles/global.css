@@ -185,6 +185,45 @@ textarea {
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
 }
 
+.shop-page {
+  display: grid;
+  gap: 20px;
+}
+
+.shop-hero {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.94), rgba(243, 236, 221, 0.92)),
+    rgba(255, 255, 255, 0.8);
+}
+
+.shop-grid {
+  align-items: stretch;
+}
+
+.shop-card {
+  display: grid;
+  gap: 14px;
+}
+
+.shop-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.shop-card-header h2 {
+  margin: 0;
+}
+
+.shop-card-header strong {
+  color: #2d6a4f;
+}
+
+.shop-button {
+  justify-self: start;
+}
+
 .hero-metrics {
   display: grid;
   gap: 12px;
