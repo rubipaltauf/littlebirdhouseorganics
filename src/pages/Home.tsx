@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { ProductImage } from "../components/imagery/ProductImage";
 
 const featuredProducts = [
   {
@@ -68,8 +69,11 @@ export default function Home() {
       </div>
 
       <div className="grid">
-        {featuredProducts.map((product) => (
+        {featuredProducts.map((product, i) => (
           <article className="panel product-card" key={product.name}>
+            <div className="product-card-image-wrap">
+              <ProductImage index={i} />
+            </div>
             <p className="eyebrow">Featured formula</p>
             <h2>{product.name}</h2>
             <p className="copy">{product.description}</p>
