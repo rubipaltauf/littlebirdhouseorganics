@@ -1,38 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ProductImage } from "../components/imagery/ProductImage";
 import { useCart } from "../context/CartContext";
-
-const products = [
-  {
-    name: "Whipped Body Butter",
-    price: "$28",
-    description:
-      "A lush, cushiony butter for deep hydration and a soft, dewy finish.",
-    details: "Shea • mango butter • plant oils",
-  },
-  {
-    name: "Botanical Body Oil",
-    price: "$24",
-    description:
-      "A silky daily oil that sinks in beautifully and leaves skin glowing.",
-    details: "Fast-absorbing • warm scent notes",
-  },
-  {
-    name: "Glow Balm",
-    price: "$16",
-    description:
-      "A rich rescue balm for cuticles, elbows, heels, and extra-dry spots.",
-    details: "Pocket size • concentrated moisture",
-  },
-  {
-    name: "Seasonal Bundle",
-    price: "$42",
-    description:
-      "A giftable pairing of butter and oil for a complete body care ritual.",
-    details: "Limited drop • bundled savings",
-  },
-];
+import { getProducts } from "../lib/products";
+import type { Product } from "../types";
 
 const promises = [
   "Soft, polished branding that feels gift-worthy.",
@@ -42,10 +13,15 @@ const promises = [
 
 export default function Shop() {
   const { addItem } = useCart();
+  const [products, setProducts] = useState<Product[]>([]);
   const [added, setAdded] = useState<string | null>(null);
 
-  function handleAdd(product: { name: string; price: string }) {
-    addItem(product);
+  useEffect(() => {
+    void getProducts().then(setProducts);
+  }, []);
+
+  function handleAdd(product: Product) {
+    addItem({ name: product.name, price: product.price });
     setAdded(product.name);
     setTimeout(() => setAdded(null), 1400);
   }

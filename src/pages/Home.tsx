@@ -1,26 +1,8 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ProductImage } from "../components/imagery/ProductImage";
-
-const featuredProducts = [
-  {
-    name: "Whipped Body Butter",
-    description:
-      "Rich, cloud-soft moisture with shea butter, mango butter, and skin-loving oils.",
-    note: "Best for dry skin and daily glow.",
-  },
-  {
-    name: "Botanical Body Oil",
-    description:
-      "A silky finishing oil for post-shower hydration and a warm, natural sheen.",
-    note: "Lightweight, fast-absorbing finish.",
-  },
-  {
-    name: "Glow Balm",
-    description:
-      "A concentrated balm for elbows, cuticles, and extra-dry spots that need extra love.",
-    note: "Pocket-friendly rescue moisture.",
-  },
-];
+import { getProducts } from "../lib/products";
+import type { Product } from "../types";
 
 const benefits = [
   "Small-batch formulas with a clean, luxurious feel.",
@@ -29,6 +11,12 @@ const benefits = [
 ];
 
 export default function Home() {
+  const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
+
+  useEffect(() => {
+    void getProducts().then((all) => setFeaturedProducts(all.slice(0, 3)));
+  }, []);
+
   return (
     <section className="homepage stack">
       <div className="hero hero-home">
@@ -77,7 +65,7 @@ export default function Home() {
             <p className="eyebrow">Featured formula</p>
             <h2>{product.name}</h2>
             <p className="copy">{product.description}</p>
-            <p className="product-note">{product.note}</p>
+            <p className="product-note">{product.details}</p>
           </article>
         ))}
       </div>
