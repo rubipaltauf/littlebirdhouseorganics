@@ -18,5 +18,15 @@ export type Product = {
   description: string;
   details: string;
   sortOrder: number;
+  stockQuantity: number;
+};
+
+export type InventoryTransaction = {
+  id: string;
+  productId: string;
+  change: number;
+  reason: string;
+  note: string | null;
+  createdAt: string;
 };
 

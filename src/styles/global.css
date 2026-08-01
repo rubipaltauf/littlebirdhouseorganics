@@ -792,3 +792,137 @@ textarea {
   flex-shrink: 0;
 }
 
+/* ── Stock badges (shop cards) ──────────────────────────────────── */
+.shop-card-stock-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.stock-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.stock-in  { background: rgba(44, 92, 56, 0.12); color: #2a5c38; border: 1px solid rgba(44,92,56,0.24); }
+.stock-low { background: rgba(196, 138, 48, 0.14); color: #8a5f1e; border: 1px solid rgba(196,138,48,0.32); }
+.stock-out { background: rgba(180, 50, 40, 0.1);  color: #a83228; border: 1px solid rgba(180,50,40,0.24); }
+
+/* Disabled shop button when OOS */
+.shop-button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* ── Stock pills (admin product rows) ───────────────────────────── */
+.stock-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.76rem;
+  font-weight: 600;
+}
+
+.stock-pill-in  { background: rgba(44,92,56,0.1);   color: #2a5c38; }
+.stock-pill-low { background: rgba(196,138,48,0.14); color: #8a5f1e; }
+.stock-pill-out { background: rgba(180,50,40,0.1);   color: #a83228; }
+
+.product-row-name-line {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* ── Inventory summary bar ──────────────────────────────────────── */
+.inventory-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 12px;
+}
+
+/* ── Inventory adjust panel ─────────────────────────────────────── */
+.inventory-panel {
+  margin: 0 0 4px;
+  padding: 16px 20px;
+  border-radius: 0 0 16px 16px;
+  background: rgba(247, 240, 226, 0.7);
+  border: 1px solid rgba(138, 95, 30, 0.16);
+  border-top: none;
+  display: grid;
+  gap: 12px;
+}
+
+.inventory-adjust-form {
+  display: grid;
+  gap: 8px;
+}
+
+.inventory-adjust-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.inventory-change-input {
+  width: 90px;
+  border: 1px solid rgba(138, 95, 30, 0.22);
+  border-radius: 10px;
+  padding: 8px 10px;
+  background: rgba(255, 252, 242, 0.95);
+  font: inherit;
+}
+
+.inventory-change-input:focus {
+  outline: 2px solid rgba(44, 92, 56, 0.4);
+  border-color: rgba(44, 92, 56, 0.4);
+}
+
+.inventory-reason-select {
+  flex: 1 1 180px;
+  border: 1px solid rgba(138, 95, 30, 0.22);
+  border-radius: 10px;
+  padding: 8px 10px;
+  background: rgba(255, 252, 242, 0.95);
+  font: inherit;
+}
+
+.inventory-note-input {
+  width: 100%;
+  border: 1px solid rgba(138, 95, 30, 0.22);
+  border-radius: 10px;
+  padding: 8px 12px;
+  background: rgba(255, 252, 242, 0.95);
+  font: inherit;
+  font-size: 0.93rem;
+}
+
+.inv-log-toggle {
+  font-size: 0.9rem;
+  color: #6a5c34;
+}
+
+.inv-log-toggle:hover { color: #2a5c38; }
+
+.inv-log {
+  overflow-x: auto;
+}
+
+.inv-log-table {
+  font-size: 0.9rem;
+}
+
+.inv-positive { color: #2a5c38; font-weight: 600; }
+.inv-negative { color: #a83228; font-weight: 600; }
+
