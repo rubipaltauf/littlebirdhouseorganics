@@ -62,8 +62,8 @@ export default function Home() {
             <span>placeholder ready</span>
           </div>
           <div className="metric">
-            <strong>CRM</strong>
-            <span>birthday promos ready</span>
+            <strong>Small batch</strong>
+            <span>made with care</span>
           </div>
         </div>
       </div>
@@ -104,9 +104,6 @@ export default function Home() {
           <div className="actions">
             <Link className="button primary" to="/shop">
               Preview shop
-            </Link>
-            <Link className="button secondary" to="/admin/login">
-              Open CRM
             </Link>
           </div>
         </article>

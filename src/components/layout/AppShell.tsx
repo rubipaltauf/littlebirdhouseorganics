@@ -48,7 +48,7 @@ export function AppShell() {
       <header className="topbar">
         <div className="brand">
           <strong>Little Birdhouse Organics</strong>
-          <span>Organic body butters, oils, and CRM starter</span>
+          <span>Organic body butters, oils, and botanical blends</span>
         </div>
         <nav className="nav" aria-label="Primary">
           <Link to="/">Home</Link>
@@ -77,7 +77,7 @@ export function AppShell() {
       </main>
 
       <footer className="footer">
-        Built for a GitHub Pages storefront with Supabase-backed auth and CRM.
+        Small batch body care, made with natural ingredients and slow, intentional formulas.
       </footer>
     </div>
   );

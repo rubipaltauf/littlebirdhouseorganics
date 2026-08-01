@@ -57,9 +57,6 @@ export default function Shop() {
           <Link className="button primary" to="/signup">
             Join the launch list
           </Link>
-          <Link className="button secondary" to="/admin/login">
-            Open admin CRM
-          </Link>
         </div>
       </div>
 
