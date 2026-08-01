@@ -11,3 +11,12 @@ export type Customer = {
   lastOrder: string;
 };
 
+export type Product = {
+  id: string;
+  name: string;
+  price: string;
+  description: string;
+  details: string;
+  sortOrder: number;
+};
+
