@@ -1,5 +1,7 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { ProductImage } from "../components/imagery/ProductImage";
+import { useCart } from "../context/CartContext";
 
 const products = [
   {
@@ -39,6 +41,15 @@ const promises = [
 ];
 
 export default function Shop() {
+  const { addItem } = useCart();
+  const [added, setAdded] = useState<string | null>(null);
+
+  function handleAdd(product: { name: string; price: string }) {
+    addItem(product);
+    setAdded(product.name);
+    setTimeout(() => setAdded(null), 1400);
+  }
+
   return (
     <section className="shop-page stack">
       <div className="hero shop-hero">
@@ -72,9 +83,13 @@ export default function Shop() {
               <strong>{product.price}</strong>
             </div>
             <p className="copy">{product.description}</p>
-            <button className="button primary shop-button" type="button">
-              Add to cart
-            </button>
+            <button
+                className="button primary shop-button"
+                type="button"
+                onClick={() => handleAdd(product)}
+              >
+                {added === product.name ? "Added ✓" : "Add to cart"}
+              </button>
           </article>
         ))}
       </div>

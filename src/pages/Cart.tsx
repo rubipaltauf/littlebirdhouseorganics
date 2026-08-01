@@ -1,0 +1,115 @@
+import { Link } from "react-router-dom";
+import { useCart } from "../context/CartContext";
+
+export default function Cart() {
+  const { items, removeItem, updateQty, clearCart, totalPrice } = useCart();
+
+  if (items.length === 0) {
+    return (
+      <section className="cart-page stack">
+        <div className="hero panel cart-empty">
+          <p className="eyebrow">Your cart</p>
+          <h1>Your cart is empty.</h1>
+          <p className="copy">
+            Browse the collection and add something you love.
+          </p>
+          <div className="actions">
+            <Link className="button primary" to="/shop">
+              Shop the collection
+            </Link>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  return (
+    <section className="cart-page stack">
+      <div className="hero panel cart-hero">
+        <p className="eyebrow">Your cart</p>
+        <h1>Review your order.</h1>
+      </div>
+
+      <div className="cart-layout">
+        <ul className="cart-items panel stack">
+          {items.map((item) => (
+            <li key={item.name} className="cart-item">
+              <div className="cart-item-info">
+                <strong className="cart-item-name">{item.name}</strong>
+                <span className="cart-item-unit">{item.price} each</span>
+              </div>
+
+              <div className="cart-item-controls">
+                <div className="qty-stepper">
+                  <button
+                    type="button"
+                    aria-label="Decrease quantity"
+                    onClick={() => updateQty(item.name, item.quantity - 1)}
+                    disabled={item.quantity <= 1}
+                  >
+                    −
+                  </button>
+                  <span>{item.quantity}</span>
+                  <button
+                    type="button"
+                    aria-label="Increase quantity"
+                    onClick={() => updateQty(item.name, item.quantity + 1)}
+                  >
+                    +
+                  </button>
+                </div>
+
+                <strong className="cart-item-total">
+                  ${(item.priceNum * item.quantity).toFixed(2)}
+                </strong>
+
+                <button
+                  type="button"
+                  className="text-button cart-remove"
+                  aria-label={`Remove ${item.name}`}
+                  onClick={() => removeItem(item.name)}
+                >
+                  Remove
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
+
+        <div className="cart-summary panel stack">
+          <p className="eyebrow">Order summary</p>
+          <div className="cart-summary-row">
+            <span>Subtotal</span>
+            <strong>${totalPrice.toFixed(2)}</strong>
+          </div>
+          <div className="cart-summary-row muted">
+            <span>Shipping</span>
+            <span>Calculated at checkout</span>
+          </div>
+          <hr className="cart-divider" />
+          <div className="cart-summary-row cart-total-row">
+            <strong>Total</strong>
+            <strong>${totalPrice.toFixed(2)}</strong>
+          </div>
+
+          <button type="button" className="button primary cart-checkout-btn" disabled>
+            Checkout — coming soon
+          </button>
+
+          <div className="actions">
+            <Link className="button secondary" to="/shop">
+              Continue shopping
+            </Link>
+            <button
+              type="button"
+              className="text-button cart-clear"
+              onClick={clearCart}
+            >
+              Clear cart
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
