@@ -4,6 +4,7 @@ import { AppShell } from "./components/layout/AppShell";
 import Account from "./pages/Account";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminLogin from "./pages/AdminLogin";
+import Cart from "./pages/Cart";
 import CustomerDetail from "./pages/CustomerDetail";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -19,6 +20,14 @@ export default function App() {
         <Route path="shop" element={<Shop />} />
         <Route path="login" element={<Login />} />
         <Route path="signup" element={<Signup />} />
+        <Route
+          path="cart"
+          element={
+            <RouteGate>
+              <Cart />
+            </RouteGate>
+          }
+        />
         <Route
           path="account"
           element={
