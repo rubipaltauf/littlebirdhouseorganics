@@ -60,12 +60,8 @@ function DiscountInput() {
 }
 
 export default function Cart() {
-<<<<<<< HEAD
-  const { items, removeItem, updateQty, clearCart, totalPrice } = useCart();
-=======
   const { items, removeItem, updateQty, clearCart, totalPrice, discountAmount, finalPrice } =
     useCart();
->>>>>>> f1c4a04 (Add discount codes and timed sale pricing (#10))
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
