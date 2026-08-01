@@ -6,7 +6,7 @@ export function AppShell() {
       <header className="topbar">
         <div className="brand">
           <strong>Little Birdhouse Organics</strong>
-          <span>Storefront + CRM starter</span>
+          <span>Organic body butters, oils, and CRM starter</span>
         </div>
         <nav className="nav" aria-label="Primary">
           <Link to="/">Home</Link>
@@ -22,9 +22,8 @@ export function AppShell() {
       </main>
 
       <footer className="footer">
-        Built for a GitHub Pages frontend with Supabase-backed auth and CRM.
+        Built for a GitHub Pages storefront with Supabase-backed auth and CRM.
       </footer>
     </div>
   );
 }
-

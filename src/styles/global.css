@@ -94,10 +94,45 @@ textarea {
   gap: 20px;
 }
 
+.hero-home {
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-home::after {
+  content: "";
+  position: absolute;
+  inset: auto -40px -60px auto;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(214, 188, 140, 0.32), transparent 72%);
+  pointer-events: none;
+}
+
+.hero-copy {
+  display: grid;
+  gap: 14px;
+  max-width: 720px;
+}
+
+.eyebrow {
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.75rem;
+  color: #7b6a43;
+}
+
 .hero h1 {
   margin: 0;
   font-size: clamp(2rem, 6vw, 4rem);
   line-height: 1.02;
+}
+
+.hero-lead {
+  max-width: 62ch;
+  font-size: 1.08rem;
 }
 
 .hero p,
@@ -134,10 +169,69 @@ textarea {
   border-color: rgba(45, 106, 79, 0.2);
 }
 
+.button:hover {
+  transform: translateY(-1px);
+}
+
 .grid {
   display: grid;
   gap: 20px;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.story-grid {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.hero-metrics {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+}
+
+.metric {
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: rgba(243, 236, 221, 0.82);
+  border: 1px solid rgba(123, 106, 67, 0.14);
+  display: grid;
+  gap: 4px;
+}
+
+.metric strong {
+  font-size: 1.1rem;
+}
+
+.metric span {
+  color: #667870;
+  font-size: 0.92rem;
+}
+
+.product-card h2,
+.highlight-panel h2,
+.banner h2 {
+  margin: 0;
+}
+
+.product-note {
+  margin: 0;
+  color: #7b6a43;
+  font-size: 0.95rem;
+}
+
+.highlight-panel {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(248, 242, 231, 0.94)),
+    rgba(255, 255, 255, 0.8);
+}
+
+.banner {
+  display: grid;
+  gap: 14px;
+  align-items: start;
+  background: linear-gradient(135deg, rgba(45, 106, 79, 0.08), rgba(214, 188, 140, 0.18));
 }
 
 .panel {
@@ -207,4 +301,3 @@ textarea {
   color: #2d6a4f;
   font-size: 0.9rem;
 }
-
