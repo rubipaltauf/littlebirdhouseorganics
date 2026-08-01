@@ -3,6 +3,7 @@ import type { Customer } from "../types";
 export const mockCustomers: Customer[] = [
   {
     id: "cust-1001",
+    full_name: "Avery Morgan",
     name: "Avery Morgan",
     email: "avery@example.com",
     phone: "(555) 010-1001",
@@ -15,6 +16,7 @@ export const mockCustomers: Customer[] = [
   },
   {
     id: "cust-1002",
+    full_name: "Jordan Lee",
     name: "Jordan Lee",
     email: "jordan@example.com",
     phone: "(555) 010-1002",
@@ -27,6 +29,7 @@ export const mockCustomers: Customer[] = [
   },
   {
     id: "cust-1003",
+    full_name: "Taylor Reed",
     name: "Taylor Reed",
     email: "taylor@example.com",
     phone: "(555) 010-1003",

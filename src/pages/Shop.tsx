@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ProductImage } from "../components/imagery/ProductImage";
 import { useCart } from "../context/CartContext";
-import { getProducts } from "../lib/products";
+import { getEffectivePrice, getProducts } from "../lib/products";
 import type { Product } from "../types";
 
 const promises = [
@@ -27,7 +27,8 @@ export default function Shop() {
   }, []);
 
   function handleAdd(product: Product) {
-    addItem({ name: product.name, price: product.price });
+    const { display } = getEffectivePrice(product);
+    addItem({ name: product.name, price: display });
     setAdded(product.name);
     setTimeout(() => setAdded(null), 1400);
   }
@@ -59,6 +60,7 @@ export default function Shop() {
 
       <div className="grid shop-grid">
         {products.map((product, i) => {
+          const { display: effectiveDisplay, onSale } = getEffectivePrice(product);
           const inCart = cartQty(product.name);
           const isOos = product.stockQuantity === 0;
           const atMax = inCart >= product.stockQuantity;
@@ -67,6 +69,7 @@ export default function Shop() {
           return (
             <article className="panel shop-card" key={product.name}>
               <div className="shop-card-image-wrap">
+                {onSale && <span className="sale-badge">Sale</span>}
                 <ProductImage index={i} />
               </div>
               <div className="shop-card-stock-row">
@@ -75,8 +78,22 @@ export default function Shop() {
               </div>
               <div className="shop-card-header">
                 <h2>{product.name}</h2>
-                <strong>{product.price}</strong>
+                <div className="shop-card-price">
+                  {onSale ? (
+                    <>
+                      <span className="price-strike">{product.price}</span>
+                      <strong className="sale-price-display">{effectiveDisplay}</strong>
+                    </>
+                  ) : (
+                    <strong>{product.price}</strong>
+                  )}
+                </div>
               </div>
+              {onSale && product.saleEndsAt && (
+                <p className="sale-ends-note">
+                  Sale ends {new Date(product.saleEndsAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                </p>
+              )}
               <p className="copy">{product.description}</p>
               <button
                 className="button primary shop-button"

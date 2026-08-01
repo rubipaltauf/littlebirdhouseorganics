@@ -10,6 +10,9 @@ type ProductRow = {
   details: string;
   sort_order: number;
   stock_quantity: number;
+  sale_price: number | null;
+  sale_starts_at: string | null;
+  sale_ends_at: string | null;
 };
 
 type TransactionRow = {
@@ -21,15 +24,23 @@ type TransactionRow = {
   created_at: string;
 };
 
+function parsePrice(price: string): number {
+  return parseFloat(price.replace(/[^0-9.]/g, "")) || 0;
+}
+
 function toProduct(row: ProductRow): Product {
   return {
     id: row.id,
     name: row.name,
     price: row.price,
+    priceNum: parsePrice(row.price),
     description: row.description,
     details: row.details,
     sortOrder: row.sort_order,
     stockQuantity: row.stock_quantity,
+    salePrice: row.sale_price,
+    saleStartsAt: row.sale_starts_at,
+    saleEndsAt: row.sale_ends_at,
   };
 }
 
@@ -51,7 +62,7 @@ export async function getProducts(): Promise<Product[]> {
 
   const { data, error } = await supabase
     .from("products")
-    .select("id, name, price, description, details, sort_order, stock_quantity")
+    .select("id, name, price, description, details, sort_order, stock_quantity, sale_price, sale_starts_at, sale_ends_at")
     .order("sort_order", { ascending: true })
     .order("created_at", { ascending: true });
 
@@ -71,6 +82,9 @@ export type ProductInput = {
   details: string;
   sort_order?: number;
   stock_quantity?: number;
+  sale_price?: number | null;
+  sale_starts_at?: string | null;
+  sale_ends_at?: string | null;
 };
 
 export async function createProduct(input: ProductInput): Promise<Product> {
@@ -87,8 +101,11 @@ export async function createProduct(input: ProductInput): Promise<Product> {
       details: input.details,
       sort_order: input.sort_order ?? 0,
       stock_quantity: input.stock_quantity ?? 0,
+      sale_price: input.sale_price ?? null,
+      sale_starts_at: input.sale_starts_at ?? null,
+      sale_ends_at: input.sale_ends_at ?? null,
     })
-    .select("id, name, price, description, details, sort_order, stock_quantity")
+    .select("id, name, price, description, details, sort_order, stock_quantity, sale_price, sale_starts_at, sale_ends_at")
     .single();
 
   if (error) throw error;
@@ -117,7 +134,7 @@ export async function updateProduct(id: string, input: Partial<ProductInput>): P
     .from("products")
     .update({ ...input, updated_at: new Date().toISOString() })
     .eq("id", id)
-    .select("id, name, price, description, details, sort_order, stock_quantity")
+    .select("id, name, price, description, details, sort_order, stock_quantity, sale_price, sale_starts_at, sale_ends_at")
     .single();
 
   if (error) throw error;
@@ -197,4 +214,28 @@ export async function getInventoryLog(productId: string): Promise<InventoryTrans
   }
 
   return (data as TransactionRow[] | null)?.map(toTransaction) ?? [];
+}
+
+/** Returns true if the product currently has an active sale price. */
+export function isOnSale(product: Product): boolean {
+  if (product.salePrice === null) return false;
+  const now = new Date();
+  if (product.saleStartsAt && new Date(product.saleStartsAt) > now) return false;
+  if (product.saleEndsAt && new Date(product.saleEndsAt) < now) return false;
+  return true;
+}
+
+/** Returns the price the customer should pay right now (sale or regular). */
+export function getEffectivePrice(product: Product): {
+  display: string;
+  num: number;
+  onSale: boolean;
+} {
+  if (isOnSale(product) && product.salePrice !== null) {
+    const formatted = product.salePrice % 1 === 0
+      ? `$${product.salePrice}`
+      : `$${product.salePrice.toFixed(2)}`;
+    return { display: formatted, num: product.salePrice, onSale: true };
+  }
+  return { display: product.price, num: product.priceNum, onSale: false };
 }
