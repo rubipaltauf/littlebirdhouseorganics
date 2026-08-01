@@ -20,14 +20,7 @@ export default function App() {
         <Route path="shop" element={<Shop />} />
         <Route path="login" element={<Login />} />
         <Route path="signup" element={<Signup />} />
-        <Route
-          path="cart"
-          element={
-            <RouteGate>
-              <Cart />
-            </RouteGate>
-          }
-        />
+        <Route path="cart" element={<Cart />} />
         <Route
           path="account"
           element={

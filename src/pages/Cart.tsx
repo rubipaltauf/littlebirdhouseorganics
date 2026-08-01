@@ -1,8 +1,15 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { getSession } from "../lib/auth";
 import { useCart } from "../context/CartContext";
 
 export default function Cart() {
   const { items, removeItem, updateQty, clearCart, totalPrice } = useCart();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    void getSession().then((s) => setIsLoggedIn(Boolean(s?.user)));
+  }, []);
 
   if (items.length === 0) {
     return (
@@ -92,9 +99,23 @@ export default function Cart() {
             <strong>${totalPrice.toFixed(2)}</strong>
           </div>
 
-          <button type="button" className="button primary cart-checkout-btn" disabled>
-            Checkout — coming soon
-          </button>
+          {isLoggedIn ? (
+            <button type="button" className="button primary cart-checkout-btn" disabled>
+              Checkout — coming soon
+            </button>
+          ) : (
+            <>
+              <button type="button" className="button primary cart-checkout-btn" disabled>
+                Checkout as guest — coming soon
+              </button>
+              <div className="cart-signin-prompt">
+                <span>Have an account?</span>
+                <Link to="/login" state={{ from: "/cart" }} className="cart-signin-link">
+                  Sign in for faster checkout
+                </Link>
+              </div>
+            </>
+          )}
 
           <div className="actions">
             <Link className="button secondary" to="/shop">
