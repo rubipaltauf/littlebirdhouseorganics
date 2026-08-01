@@ -9,6 +9,7 @@ export const mockProducts: Product[] = [
       "A lush, cushiony butter for deep hydration and a soft, dewy finish.",
     details: "Shea • mango butter • plant oils",
     sortOrder: 0,
+    stockQuantity: 12,
   },
   {
     id: "mock-2",
@@ -18,6 +19,7 @@ export const mockProducts: Product[] = [
       "A silky daily oil that sinks in beautifully and leaves skin glowing.",
     details: "Fast-absorbing • warm scent notes",
     sortOrder: 1,
+    stockQuantity: 8,
   },
   {
     id: "mock-3",
@@ -27,6 +29,7 @@ export const mockProducts: Product[] = [
       "A rich rescue balm for cuticles, elbows, heels, and extra-dry spots.",
     details: "Pocket size • concentrated moisture",
     sortOrder: 2,
+    stockQuantity: 3,
   },
   {
     id: "mock-4",
@@ -36,5 +39,6 @@ export const mockProducts: Product[] = [
       "A giftable pairing of butter and oil for a complete body care ritual.",
     details: "Limited drop • bundled savings",
     sortOrder: 3,
+    stockQuantity: 0,
   },
 ];
