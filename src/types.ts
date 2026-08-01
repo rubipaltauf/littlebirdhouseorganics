@@ -5,6 +5,8 @@ export type Customer = {
   phone: string;
   birthday: string;
   consent: "Marketing opted in" | "Marketing not yet confirmed";
+  status: string;
+  lastContact: string;
   tags: string[];
   lastOrder: string;
 };
