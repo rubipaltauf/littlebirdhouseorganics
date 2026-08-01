@@ -5,8 +5,8 @@
     sans-serif;
   line-height: 1.5;
   font-weight: 400;
-  color: #23423a;
-  background: #fbf8f2;
+  color: #1c2e1a;
+  background: #f7f0e2;
 }
 
 * {
@@ -23,8 +23,17 @@ body,
 body {
   min-height: 100vh;
   background:
-    radial-gradient(circle at top, rgba(140, 187, 144, 0.18), transparent 38%),
-    #fbf8f2;
+    radial-gradient(ellipse 65% 42% at 10% 6%, rgba(196, 158, 72, 0.22) 0%, transparent 55%),
+    radial-gradient(ellipse 52% 48% at 90% 28%, rgba(78, 148, 100, 0.18) 0%, transparent 52%),
+    radial-gradient(ellipse 70% 38% at 52% 94%, rgba(176, 136, 66, 0.14) 0%, transparent 55%),
+    #f7f0e2;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: Georgia, Cambria, "Playfair Display", serif;
 }
 
 a {
@@ -58,11 +67,15 @@ textarea {
 }
 
 .brand strong {
-  font-size: 1.1rem;
+  font-family: Georgia, Cambria, serif;
+  font-size: 1.18rem;
+  font-weight: 700;
+  color: #19281a;
+  letter-spacing: -0.01em;
 }
 
 .brand span {
-  color: #5d6f67;
+  color: #7a6434;
   font-size: 0.92rem;
 }
 
@@ -76,16 +89,26 @@ textarea {
   text-decoration: none;
   padding: 8px 12px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.7);
-  border: 1px solid rgba(35, 66, 58, 0.12);
+  background: rgba(247, 240, 226, 0.9);
+  border: 1px solid rgba(138, 95, 30, 0.28);
+  color: #2a5c38;
+  font-weight: 500;
+  transition: background 0.18s, border-color 0.18s, transform 0.18s;
+}
+
+.nav a:hover {
+  background: rgba(44, 92, 56, 0.1);
+  border-color: rgba(44, 92, 56, 0.38);
 }
 
 .hero,
 .panel {
-  background: rgba(255, 255, 255, 0.8);
-  border: 1px solid rgba(35, 66, 58, 0.1);
+  background: rgba(255, 252, 242, 0.92);
+  border: 1px solid rgba(138, 95, 30, 0.16);
   border-radius: 24px;
-  box-shadow: 0 20px 50px rgba(35, 66, 58, 0.08);
+  box-shadow:
+    0 24px 60px rgba(44, 95, 58, 0.09),
+    0 2px 8px rgba(138, 95, 30, 0.06);
 }
 
 .hero {
@@ -97,6 +120,21 @@ textarea {
 .hero-home {
   position: relative;
   overflow: hidden;
+  background: linear-gradient(148deg, rgba(255, 253, 245, 0.97) 0%, rgba(240, 228, 196, 0.94) 100%);
+}
+
+/* Botanical leaf ornament */
+.hero-home::before {
+  content: "";
+  position: absolute;
+  top: -32px;
+  right: 32px;
+  width: 150px;
+  height: 210px;
+  background: linear-gradient(158deg, rgba(96, 164, 88, 0.28) 0%, rgba(60, 120, 60, 0.06) 100%);
+  border-radius: 50% 0 50% 0;
+  transform: rotate(16deg);
+  pointer-events: none;
 }
 
 .hero-home::after {
@@ -106,7 +144,7 @@ textarea {
   width: 220px;
   height: 220px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(214, 188, 140, 0.32), transparent 72%);
+  background: radial-gradient(circle, rgba(196, 138, 48, 0.36), transparent 70%);
   pointer-events: none;
 }
 
@@ -119,15 +157,19 @@ textarea {
 .eyebrow {
   margin: 0;
   text-transform: uppercase;
-  letter-spacing: 0.14em;
-  font-size: 0.75rem;
-  color: #7b6a43;
+  letter-spacing: 0.18em;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #8a5f1e;
 }
 
 .hero h1 {
   margin: 0;
-  font-size: clamp(2rem, 6vw, 4rem);
+  font-weight: 400;
+  font-size: clamp(2.2rem, 6.5vw, 4.4rem);
   line-height: 1.02;
+  color: #19281a;
+  letter-spacing: -0.015em;
 }
 
 .hero-lead {
@@ -139,7 +181,7 @@ textarea {
 .copy,
 .muted {
   margin: 0;
-  color: #51635c;
+  color: #4a5e40;
 }
 
 .actions {
@@ -160,16 +202,28 @@ textarea {
 }
 
 .button.primary {
-  background: #2d6a4f;
+  background: #2a5c38;
   color: #fff;
+  box-shadow: 0 2px 12px rgba(42, 92, 56, 0.28);
+  transition: background 0.18s, box-shadow 0.18s, transform 0.18s;
+}
+
+.button.primary:hover {
+  background: #1e4228;
+  box-shadow: 0 4px 18px rgba(42, 92, 56, 0.38);
+  transform: translateY(-1px);
 }
 
 .button.secondary {
   background: transparent;
-  border-color: rgba(45, 106, 79, 0.2);
+  border-color: rgba(138, 95, 30, 0.38);
+  color: #6a4c18;
+  transition: background 0.18s, border-color 0.18s, transform 0.18s;
 }
 
-.button:hover {
+.button.secondary:hover {
+  background: rgba(138, 95, 30, 0.08);
+  border-color: rgba(138, 95, 30, 0.56);
   transform: translateY(-1px);
 }
 
@@ -191,9 +245,22 @@ textarea {
 }
 
 .shop-hero {
-  background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.94), rgba(243, 236, 221, 0.92)),
-    rgba(255, 255, 255, 0.8);
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(148deg, rgba(255, 253, 245, 0.97) 0%, rgba(238, 224, 188, 0.94) 100%);
+}
+
+.shop-hero::before {
+  content: "";
+  position: absolute;
+  top: -24px;
+  right: 24px;
+  width: 130px;
+  height: 184px;
+  background: linear-gradient(158deg, rgba(96, 164, 88, 0.24) 0%, rgba(60, 120, 60, 0.04) 100%);
+  border-radius: 50% 0 50% 0;
+  transform: rotate(16deg);
+  pointer-events: none;
 }
 
 .shop-grid {
@@ -217,7 +284,9 @@ textarea {
 }
 
 .shop-card-header strong {
-  color: #2d6a4f;
+  font-family: Georgia, Cambria, serif;
+  color: #2a5c38;
+  font-size: 1.1rem;
 }
 
 .shop-button {
@@ -233,18 +302,20 @@ textarea {
 .metric {
   padding: 14px 16px;
   border-radius: 18px;
-  background: rgba(243, 236, 221, 0.82);
-  border: 1px solid rgba(123, 106, 67, 0.14);
+  background: rgba(228, 206, 152, 0.62);
+  border: 1px solid rgba(138, 95, 30, 0.24);
   display: grid;
   gap: 4px;
 }
 
 .metric strong {
-  font-size: 1.1rem;
+  font-family: Georgia, Cambria, serif;
+  font-size: 1.15rem;
+  color: #2a4820;
 }
 
 .metric span {
-  color: #667870;
+  color: #6a5c34;
   font-size: 0.92rem;
 }
 
@@ -256,21 +327,40 @@ textarea {
 
 .product-note {
   margin: 0;
-  color: #7b6a43;
+  color: #8a5f1e;
   font-size: 0.95rem;
 }
 
+/* ── Product & shop card image wrappers ─────────────────────────── */
+/* Full-bleed illustration at the top of each card */
+.product-card-image-wrap,
+.shop-card-image-wrap {
+  margin: -20px -20px 4px;
+  width: calc(100% + 40px);
+  height: 160px;
+  border-radius: 22px 22px 0 0;
+  overflow: hidden;
+  display: block;
+  flex-shrink: 0;
+}
+
+.product-card-image-wrap svg,
+.shop-card-image-wrap svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
 .highlight-panel {
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(248, 242, 231, 0.94)),
-    rgba(255, 255, 255, 0.8);
+  background: linear-gradient(180deg, rgba(255, 252, 242, 0.96) 0%, rgba(238, 222, 192, 0.94) 100%);
 }
 
 .banner {
   display: grid;
   gap: 14px;
   align-items: start;
-  background: linear-gradient(135deg, rgba(45, 106, 79, 0.08), rgba(214, 188, 140, 0.18));
+  background: linear-gradient(135deg, rgba(44, 92, 56, 0.1), rgba(196, 158, 72, 0.2));
+  border-color: rgba(138, 95, 30, 0.2);
 }
 
 .panel {
@@ -285,7 +375,7 @@ textarea {
 .list {
   margin: 0;
   padding-left: 18px;
-  color: #51635c;
+  color: #4a5e3c;
 }
 
 .tag-list {
@@ -360,7 +450,7 @@ textarea {
 .table td {
   text-align: left;
   padding: 12px 10px;
-  border-bottom: 1px solid rgba(35, 66, 58, 0.1);
+  border-bottom: 1px solid rgba(138, 95, 30, 0.12);
   vertical-align: top;
 }
 
@@ -381,15 +471,21 @@ textarea {
 .field input,
 .field textarea {
   width: 100%;
-  border: 1px solid rgba(35, 66, 58, 0.15);
+  border: 1px solid rgba(138, 95, 30, 0.22);
   border-radius: 14px;
   padding: 12px 14px;
-  background: #fff;
+  background: rgba(255, 252, 242, 0.95);
+}
+
+.field input:focus,
+.field textarea:focus {
+  outline: 2px solid rgba(44, 92, 56, 0.4);
+  border-color: rgba(44, 92, 56, 0.4);
 }
 
 .footer {
   padding: 20px 0 40px;
-  color: #667870;
+  color: #6a5c3c;
   font-size: 0.92rem;
 }
 
@@ -399,7 +495,9 @@ textarea {
   gap: 8px;
   padding: 6px 10px;
   border-radius: 999px;
-  background: rgba(45, 106, 79, 0.12);
-  color: #2d6a4f;
+  background: rgba(44, 92, 56, 0.1);
+  border: 1px solid rgba(44, 92, 56, 0.22);
+  color: #2a5c38;
   font-size: 0.9rem;
 }
+

@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { ProductImage } from "../components/imagery/ProductImage";
 
 const products = [
   {
@@ -63,8 +64,11 @@ export default function Shop() {
       </div>
 
       <div className="grid shop-grid">
-        {products.map((product) => (
+        {products.map((product, i) => (
           <article className="panel shop-card" key={product.name}>
+            <div className="shop-card-image-wrap">
+              <ProductImage index={i} />
+            </div>
             <p className="eyebrow">{product.details}</p>
             <div className="shop-card-header">
               <h2>{product.name}</h2>
