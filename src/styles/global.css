@@ -57,7 +57,16 @@ textarea {
   gap: 16px;
   justify-content: space-between;
   align-items: center;
-  padding: 16px 0 24px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  /* break out of .shell's 24px side padding so the bar spans full width */
+  margin: 0 -24px;
+  padding: 14px 24px;
+  background: rgba(247, 240, 226, 0.97);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(138, 95, 30, 0.12);
 }
 
 .brand {
